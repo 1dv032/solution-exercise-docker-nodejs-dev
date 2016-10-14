@@ -21,8 +21,8 @@ VOLUME /opt/app/node_modules
 
 
 # copy the the
-COPY app/ /opt/app/.
+#COPY app/ /opt/app/.
 
-WORKDIR /opt/app/
+#WORKDIR /opt/app/
 
 EXPOSE 8080
