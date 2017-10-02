@@ -1,28 +1,32 @@
 ############################################################
-# Dockerfile to build a node.js v. 6 development
+# Dockerfile to build a node.js development
 # Based on Ubuntu
 ############################################################
 
 # Set the base image to Ubuntu
-FROM node:6
+FROM node
 
 # File Author / Maintainer
-MAINTAINER thajo
+LABEL "com.example.vendor"="LNU"
+LABEL version="1.0"
+LABEL maintainer="thajo@lnu.se"
 
-# Should run commands as non root if going to production!!!
 
-# Since we want to use the cache when building new containers
-# Trick taken from: http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/
-ADD app/package.json /tmp/package.json
-RUN cd /tmp && npm install
-# create an app folder
-RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
+# Since it is just dev we create this with std user
+RUN mkdir -p /opt/app
+
+# Start with a WORKDIR
+WORKDIR /opt/app
+
+# First take the package.json and install all the modules
+COPY package.json .
+RUN npm install --quiet
+
+# Mount this VOLUME to avoid writting over the node_moules when we
+# mount the local directory in the command
 VOLUME /opt/app/node_modules
 
-
-# copy the the
-#COPY app/ /opt/app/.
-
-#WORKDIR /opt/app/
+# Copy the app
+COPY . .
 
 EXPOSE 8080
